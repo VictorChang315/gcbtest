@@ -26,9 +26,11 @@ os.makedirs('data')
 os.makedirs('tmp')
 myhost = socket.gethostname()
 IPAddr = socket.gethostbyname(myhost)
-currentOS = platform.platform()
+currentOS = platform.win32_ver()
 logger.debug(myhost)
 logger.debug(IPAddr)
+print(currentOS)
+print(platform.uname())
 logger.debug(currentOS)
 
 secedit_filepath = "./tmp/secedit.txt"
@@ -111,7 +113,7 @@ def parseReg(itemName, regPath):
         count = winreg.QueryInfoKey(key)[1]
 
         for index in range(count):
-            name,value, type = winreg.EnumValue(key, index)
+            name,value, vtype = winreg.EnumValue(key, index)
             if name.lower() == regbase.lower():
                 print("value")
                 print(value)
@@ -190,7 +192,7 @@ def parseNTP():
     ntpserver=''
     matched = False
     domain_pattern = '^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$'
-    ip_pattern = '\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
+    ip_pattern = '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
     try:
         with io.open(ntp_filepath, "r",errors='ignore') as fp:
             lines = fp.readlines()
@@ -262,6 +264,140 @@ def parseUpdatePatch():
         logger.debug('parseUpdatePath error')
     return check_result, latest_date
 
+def parseSmartCard(reportItem):
+    check_result = False
+    if result[reportItem] == '1':
+        check_result = True
+        result[reportItem] = "鎖定工作站"
+    elif result[reportItem] == '0':
+        result[reportItem] = "No Action"
+    elif result[reportItem] == '2':
+        result[reportItem] = "強制登出"
+    elif result[reportItem] == '3':
+        result[reportItem] == "如果是遠端桌面服務工作階段則中斷連線"
+    return check_result
+
+def parseCrypto(reportItem):
+    check_result = False
+    if result[reportItem] == 0:
+        check_result = True
+        result[reportItem] = "當新金鑰被儲存及使用時，不要求使用者的輸入"
+    elif result[reportItem] == 1:
+        result[reportItem] = "金鑰第一次使用時提示使用者輸入"
+    elif result[reportItem] == 2:
+        result[reportItem] = "使用者必須在每次使用金鑰時輸入密碼"
+    return check_result
+
+def parseAdminControl(reportItem):
+    check_result = False
+    if result[reportItem] == 5:
+        check_result = True
+        result[reportItem] = "提示要求同意非Windows二進位檔案"
+    elif result[reportItem] == 0:
+        result[reportItem] = "提高權限而不顯視提示"
+    elif result[reportItem] == 1:
+        result[reportItem] = "在安全桌面提示顯示認證"
+    elif result[reportItem] == 2:
+        result[reportItem] = "在安全桌面提示要求同意"
+    elif result[reportItem] == 3:
+        result[reportItem] = "提示輸入認證"
+    elif result[reportItem] == 4:
+        result[reportItem] = "提示要求同意" 
+    return check_result
+
+def parseUserControl(reportItem):
+    check_result = False
+    if result[reportItem] == 3:
+        check_result = True
+        result[reportItem] = "提示輸入認證"
+    elif result[reportItem] == 0:
+        result[reportItem] = "自動拒絕提升權限要求"
+    elif result[reportItem] == 1:
+        result[reportItem] = "在安全桌提示輸入認證"
+    return check_result
+
+def parseDevice(reportItem):
+    check_result = False
+    if result[reportItem] == 0:
+        check_result = True
+        result[reportItem] = "Administrators"
+    elif result[reportItem] == 1:
+        result[reportItem] = "Administrators以及Power Users"
+    elif result[reportItem] == 2:
+        result[reportItem] = "Administrators以及Interactive Users"
+    return check_result
+
+def parseNetworkAccess(reportItem):
+    check_result = False
+    if result[reportItem] == 0:
+        check_result = True
+        result[reportItem] = "傳統 - 本機使用者以自身身份驗證"
+    elif result[reportItem] == 1:
+        result[reportItem] = "僅適用於來賓 – 本機使用者以Guest驗證"
+    return check_result
+
+def parseLANmanager(reportItem):
+    check_result = False
+    if result[reportItem] == 5:
+        check_result = True
+        result[reportItem] = "只傳送NTLMv2回應。拒絕LM和NTLM"
+    elif result[reportItem] == 0:
+        result[reportItem] = "傳送LM和NTLM回應"
+    elif result[reportItem] == 1:
+        result[reportItem] = "傳送LM和NTLM – 如有交涉，使用NTLMv2工作階段安全性"
+    elif result[reportItem] == 2:
+        result[reportItem] = "只傳送NTLM回應"
+    elif result[reportItem] == 3:
+        result[reportItem] = "只傳送NTLMv2回應"
+    elif result[reportItem] == 4:
+        result[reportItem] = "只傳送NTLMv2回應。拒絕LM" 
+    return check_result
+
+def parseConfigItem(reportItem):
+    check_result = False
+    if result[reportItem] == 2:
+        check_result = True
+        result[reportItem] = "自動"
+    elif result[reportItem] == 3:
+        result[reportItem] = "手動"
+    elif result[reportItem] == 4:
+        result[reportItem] = "停用"
+    return check_result
+
+def parseAutoRun(reportItem):
+    check_result = False
+    if result[reportItem] == 1:
+        check_result = True
+        result[reportItem] = "啟用 (不執行任何AutoRun命令)"
+    elif result[reportItem] == 2:
+        result[reportItem] = "啟用 (自動執行AutoRun命令)"
+    return check_result
+
+def parseSmartScreen(reportItem):
+    check_result = False
+    if result[reportItem] == 1:
+        check_result = True
+        result[reportItem] = "啟用 (在執行不明軟體下載之前對使用者提出警告)"
+    elif result[reportItem] == 2:
+        result[reportItem] = "啟用 (在執行不明軟體下載之前需要系統管理員核准)"
+    elif result[reportItem] == 0:
+        result[reportItem] = "關閉"
+    return check_result
+
+def parseDeviceDriver(reportItem):
+    check_result = False
+    if result[reportItem] == 1:
+        check_result = True
+        result[reportItem] = "啟用 (良好和不明)"
+    elif result[reportItem] == 3:
+        result[reportItem] = "啟用 (良好、不明及不良但關鍵)"
+    elif result[reportItem] == 7:
+        result[reportItem] = "啟用 (全部)"
+    elif result[reportItem] == 8:
+        result[reportItem] = "啟用 (僅良好)"
+    return check_result
+
+
 def check_specific_item(reportItem):
     
     matched = False
@@ -279,6 +415,27 @@ def check_specific_item(reportItem):
             matched = True
             if int(result[reportItem]) >= int(regOrigResult[reportItem].strip()):
                 check_result = True
+        elif reportItem == "互動式登入：智慧卡移除操作":
+            matched = True
+            check_result = parseSmartCard(reportItem)
+        elif reportItem == "系統加密編譯：對使用者儲存在電腦上的金鑰強制使用增強式金鑰保護":
+            matched = True
+            check_result = parseCrypto(reportItem)
+        elif reportItem == "使用者帳戶控制：在管理員核准模式，系統管理員之提升權限提示的行為":
+            matched = True
+            check_result = parseAdminControl(reportItem)
+        elif reportItem == "使用者帳戶控制：標準使用者之提升權限提示的行為":
+            matched = True
+            check_result = parseUserControl(reportItem)
+        elif reportItem == "裝置：允許格式化以及退出卸除式媒體":
+            matched = True
+            check_result = parseDevice(reportItem)
+        elif reportItem == "網路存取：共用和安全性模式用於本機帳戶":
+            matched = True
+            check_result = parseNetworkAccess(reportItem)
+        elif reportItem == "網路安全性：LAN Manager驗證等級":
+            matched = True
+            check_result = parseLANmanager(reportItem)
         elif reportItem == "鎖定記憶體中的分頁":
             matched = True
             if result.get(reportItem) == None:
@@ -315,6 +472,24 @@ def check_specific_item(reportItem):
             matched = True
             if result.get(reportItem) == None:
                 check_result = True
+        elif reportItem == "DNS Client" or reportItem == "Group Policy Client" or \
+            reportItem == "Distributed Link Tracking Client" or reportItem == "Workstation" or \
+            reportItem == "Windows Time" or reportItem == "Server" or reportItem == "DFS Replication" or \
+            reportItem == "Active Directory Domain Services" or reportItem == "Active Directory Web Services" or \
+            reportItem == "Application Identity" or reportItem == "DFS Namespace" or reportItem == "DNS Server" or \
+            reportItem == "File Replication" or reportItem == "Intersite Messaging" or \
+            reportItem == "Kerberos Key Distribution Center" or reportItem == "Netlogon":
+            matched = True
+            check_result = parseConfigItem(reportItem)
+        elif reportItem == "設定 AutoRun 的預設行為":
+            matched = True
+            check_result = parseAutoRun(reportItem)
+        elif reportItem == "設定 Windows SmartScreen 篩選工具":
+            matched = True
+            check_result = parseSmartScreen(reportItem)
+        elif reportItem == "開機啟動驅動程式初始化原則":
+            matched = True
+            check_result = parseDeviceDriver(reportItem) 
         elif reportItem == "網路安全性：NTLM SSP為主的(包含安全RPC)伺服器的最小工作階段安全性":
             matched = True
             if int(result[reportItem]) == 537395200:
@@ -343,23 +518,26 @@ def check_specific_item(reportItem):
             result[reportItem] = data_prevent
             if data_prevent == 3:
                 check_result = True
+                result[reportItem] = "為所有的Windows程式和服務開啟DEP"
+            elif data_prevent == 2:
+                result[reportItem] = "只為基本的Windows程式和服務開啟DEP"    
         elif reportItem == "安全性\記錄檔大小上限(KB)":
             matched = True
             maxSize = parseEventLog(securitylog_filepath)
             result[reportItem] = str(maxSize) + 'KB'
-            if maxSize == 196608:
+            if maxSize >= 196608:
                 check_result = True
         elif reportItem == "系統\記錄檔大小上限(KB)":
             matched = True
             maxSize = parseEventLog(systemlog_filepath)
             result[reportItem] = str(maxSize) + 'KB'
-            if maxSize == 32768:
+            if maxSize >= 32768:
                 check_result = True
         elif reportItem == "應用程式\記錄檔大小上限(KB)":
             matched = True
             maxSize = parseEventLog(applog_filepath)
             result[reportItem] = str(maxSize) + 'KB'
-            if maxSize == 32768:
+            if maxSize >= 32768:
                 check_result = True
         elif reportItem == "定期執行Microsoft Windows update":
             matched = True
@@ -394,6 +572,7 @@ def final_value(reportItem):
                 elif regOrigResult[reportItem] == result[reportItem]:
                     final_str = str(result[reportItem])
                     final_result = True
+ 
                 
             elif "/" in readableResult[reportItem]:
                 gpo_status = readableResult[reportItem].split("/",1)
@@ -403,12 +582,28 @@ def final_value(reportItem):
                     else: 
                         final_str = str(result[reportItem])
                 else:
-                    final_str = 'error'
+                    intvalue = int.from_bytes(result[reportItem], byteorder='big')
+                    if intvalue == 0  or intvalue == 1:
+                        final_str = gpo_status[intvalue]
+                    else:
+                        final_str = str(intvalue)   
                 
                 if regOrigResult[reportItem] == result[reportItem]:
                     final_result = True
             elif readableResult[reportItem] == "Audit":
                 final_str, final_result = parse_auditRule(reportItem)
+            elif readableResult[reportItem] == "Array":
+                origArray = regOrigResult[reportItem].split(",")
+                print('OrigArray')
+                print(origArray)
+                resultArray = result[reportItem]
+                if set(origArray) == set(resultArray):
+                    final_result = True
+                result_str = '\n'.join(resultArray)
+                if result_str == '':
+                    final_str = '未設定'
+                else:
+                    final_str = result_str    
             else:
                 matched, check_result = check_specific_item(reportItem)
                 if readableResult[reportItem] == "值":
