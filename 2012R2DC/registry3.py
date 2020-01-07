@@ -397,6 +397,140 @@ def parseDeviceDriver(reportItem):
         result[reportItem] = "啟用 (僅良好)"
     return check_result
 
+def parseKerberos(reportItem):
+    check_result = False
+    if result[reportItem] == int('0x7ffffffc', 16):
+        check_result = True
+        result[reportItem] = "RC4_HMAC_MD5, AES128_HMAC_SHA1, AES256_HMAC_SHA1, 未來的加密類型"
+    elif result[reportItem] == int('0x1',16):
+        result[reportItem] = "DES_CBC_CRC"
+    elif result[reportItem] == int('0x2',16):
+        result[reportItem] = "DES_CBC_MD5"
+    elif result[reportItem] == int('0x4',16):
+        result[reportItem] = "RC4_HMAC_MD5"
+    elif result[reportItem] == int('0x8',16):
+        result[reportItem] = "AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x10',16):
+        result[reportItem] = "未來加密的類型"
+    elif result[reportItem] == int('0x3',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5"
+    elif result[reportItem] == int('0x5',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5"
+    elif result[reportItem] == int('0x9',16):
+        result[reportItem] = "DES_CBC_CRC,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x11',16):
+        result[reportItem] = "DES_CBC_CRC,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe1',16):
+        result[reportItem] = "DES_CBC_CRC,未來加密的類型"
+    elif result[reportItem] == int('0x10',16):
+        result[reportItem] = "未來加密的類型"
+    elif result[reportItem] == int('0x6',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5"
+    elif result[reportItem] == int('0xa',16):
+        result[reportItem] = "DES_CBC_MD5,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x12',16):
+        result[reportItem] = "DES_CBC_MD5,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe2',16):
+        result[reportItem] = "DES_CBC_MD5,未來加密的類型"
+    elif result[reportItem] == int('0xc',16):
+        result[reportItem] = "RC4_HMAC_MD5,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x14',16):
+        result[reportItem] = "RC4_HMAC_MD5,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe4',16):
+        result[reportItem] = "RC4_HMAC_MD5,未來加密的類型"
+    elif result[reportItem] == int('0x18',16):
+        result[reportItem] = "AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe8',16):
+        result[reportItem] = "AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff0',16):
+        result[reportItem] = "AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5"
+    elif result[reportItem] == int('0xb',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x13',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe3',16):
+        result[reportItem] = "DES_CBC_MD5,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0xd',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x15',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe5',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5,未來加密的類型"
+    elif result[reportItem] == int('0x19',16):
+        result[reportItem] = "DES_CBC_CRC,AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe9',16):
+        result[reportItem] = "DES_CBC_CRC,AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff1',16):
+        result[reportItem] = "DES_CBC_CRC,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0xe',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x16',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe6',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,未來加密的類型"
+    elif result[reportItem] == int('0x1a',16):
+        result[reportItem] = "DES_CBC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffea',16):
+        result[reportItem] = "DES_CBC_MD5,AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff2',16):
+        result[reportItem] = "DES_CBC_MD5,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x1c',16):
+        result[reportItem] = "RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffec',16):
+        result[reportItem] = "RC4_HMAC_MD5,AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff4',16):
+        result[reportItem] = "RC4_HMAC_MD5,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff8',16):
+        result[reportItem] = "AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0xf',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1"
+    elif result[reportItem] == int('0x17',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffe7',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5,未來加密的類型"    
+    elif result[reportItem] == int('0x1b',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffeb',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff3',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7fffffe6',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,未來加密的類型"
+    elif result[reportItem] == int('0x1d',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffed',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5,AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff5',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff9',16):
+        result[reportItem] = "DES_CBC_CRC,AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x1e',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffee',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff6',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffffa',16):
+        result[reportItem] = "DES_CBC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffffc',16):
+        result[reportItem] = "RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x1f',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1"
+    elif result[reportItem] == int('0x7fffffef',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffff7',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffffb',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffffd',16):
+        result[reportItem] = "DES_CBC_CRC,RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7ffffffe',16):
+        result[reportItem] = "DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    elif result[reportItem] == int('0x7fffffff',16):
+        result[reportItem] = "DES_CBC_CRC,DES_CBC_MD5,RC4_HMAC_MD5,AES128_HMAC_SHA1,AES256_HMAC_SHA1,未來加密的類型"
+    return check_result
 
 def check_specific_item(reportItem):
     
@@ -504,6 +638,9 @@ def check_specific_item(reportItem):
                 result[reportItem] = "要求NTLMv2工作階段安全性,要求128位元加密"
             elif int(result[reportItem]) == 536870912:
                 result[reportItem] = "要求128位元加密"
+        elif reportItem == "設定 Windows SmartScreen 篩選工具":
+            matched = True
+            check_result = parseKerberos(reportItem)
         elif reportItem == "設定時間自動校正":
             matched = True
             ntp_checked, ntp_server = parseNTP()
