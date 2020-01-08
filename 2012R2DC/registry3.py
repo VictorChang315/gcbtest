@@ -375,11 +375,11 @@ def parseAutoRun(reportItem):
 
 def parseSmartScreen(reportItem):
     check_result = False
-    if result[reportItem] == 1:
+    if result[reportItem] == 2:
         check_result = True
-        result[reportItem] = "啟用 (在執行不明軟體下載之前對使用者提出警告)"
-    elif result[reportItem] == 2:
         result[reportItem] = "啟用 (在執行不明軟體下載之前需要系統管理員核准)"
+    elif result[reportItem] == 1:
+        result[reportItem] = "啟用 (在執行不明軟體下載之前對使用者提出警告)"
     elif result[reportItem] == 0:
         result[reportItem] = "關閉"
     return check_result
@@ -395,6 +395,24 @@ def parseDeviceDriver(reportItem):
         result[reportItem] = "啟用 (全部)"
     elif result[reportItem] == 8:
         result[reportItem] = "啟用 (僅良好)"
+    return check_result
+
+def parseAutoInstall(reportItem):
+    check_result = False
+    if result[reportItem] == 2:
+        check_result = True
+        result[reportItem] = "啟用"
+    elif result[reportItem] == 4:
+        result[reportItem] = "停用"
+    return check_result
+
+def parseUserExp(reportItem):
+    check_result = False
+    if result[reportItem] == 2:
+        check_result = True
+        result[reportItem] = "啟用"
+    elif result[reportItem] == 1:
+        result[reportItem] = "停用"
     return check_result
 
 def parseKerberos(reportItem):
@@ -624,6 +642,12 @@ def check_specific_item(reportItem):
         elif reportItem == "開機啟動驅動程式初始化原則":
             matched = True
             check_result = parseDeviceDriver(reportItem) 
+        elif reportItem == "關閉自動下載和安裝更新":
+            matched = True
+            check_result = parseAutoInstall(reportItem)
+        elif reportItem == "關閉Windows Messenger客戶經驗改進計畫":
+            matched = True
+            check_result = parseUserExp(reportItem) 
         elif reportItem == "網路安全性：NTLM SSP為主的(包含安全RPC)伺服器的最小工作階段安全性":
             matched = True
             if int(result[reportItem]) == 537395200:
