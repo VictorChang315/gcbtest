@@ -415,6 +415,81 @@ def parseUserExp(reportItem):
         result[reportItem] = "停用"
     return check_result
 
+def parseMSSPercent(reportItem):
+    check_result = False
+    if result[reportItem] == 90:
+        check_result = True
+        result[reportItem] = "0.9"
+    else:
+        result[reportItem] = result[reportItem]/100
+    return check_result
+
+def parseMSSIPsecExempt(reportItem):
+    check_result = False
+    if result[reportItem] == 1:
+        check_result = True
+        result[reportItem] = "Multicast, broadcast, and ISAKMP are exempt (Best for Windows XP)"
+    elif result[reportItem] == 0:
+        result[reportItem] = "Allow all exemptions (least secure)."
+    elif result[reportItem] == 2:
+        result[reportItem] = "RSVP, Kerberos, and ISAKMP are exempt."
+    elif result[reportItem] == 3:
+        result[reportItem] = "Only ISAKMP is exempt (recommended for Windows Server 2003)."
+    return check_result
+
+def parseMSSIPSourceRoute(reportItem):
+    check_result = False
+    if result[reportItem] == 2:
+        check_result = True
+        result[reportItem] = "Highest protection, source routing is completely disabled"
+    elif result[reportItem] == 0:
+        result[reportItem] = "No additional protection, source routed packets are allowed"
+    elif result[reportItem] == 1:
+        result[reportItem] = "Medium, source routed packets ignored when IP forwarding is enabled"
+    return check_result
+
+def parseMSSIPv6SourceRoute(reportItem):
+    check_result = False
+    if result[reportItem] == 2:
+        check_result = True
+        result[reportItem] = "Highest protection, source routing is completely disabled"
+    elif result[reportItem] == 0:
+        result[reportItem] = "No additional protection, source routed packets are allowed"
+    elif result[reportItem] == 1:
+        result[reportItem] = "Medium, source routed packets ignored when IP forwarding is enabled"
+    return check_result
+
+def parseFormatRemovable(reportItem):
+    check_result = False
+    if result[reportItem] == 0:
+        check_result = True
+        result[reportItem] = "Administrators"
+    elif result[reportItem] == 1:
+        result[reportItem] = "Administrators and Power Users"
+    elif result[reportItem] == 2:
+        result[reportItem] = "Administrators and Interactive Users"
+    return check_result
+
+def parseNoAutoRun(reportItem):
+    check_result = False
+    if result[reportItem] == 255:
+        check_result = True
+        result[reportItem] = "已啟用：所有磁碟機"
+    return check_result
+
+def parseClientEncrypt(reportItem):
+    check_result = False
+    if result[reportItem] == 3:
+        check_result = True
+        result[reportItem] = "已啟用：高等級"
+    elif result[reportItem] == 1:
+        result[reportItem] = "已啟用：低等級"
+    elif result[reportItem] == 2:
+        result[reportItem] = "已啟用：Client Compatible"
+    elif result[reportItem] == 4:
+        result[reportItem] = "已啟用：FIPS-compliant"
+    return check_result
+
 def parseKerberos(reportItem):
     check_result = False
     if result[reportItem] == int('0x7ffffffc', 16):
@@ -647,7 +722,13 @@ def check_specific_item(reportItem):
             check_result = parseAutoInstall(reportItem)
         elif reportItem == "關閉Windows Messenger客戶經驗改進計畫":
             matched = True
-            check_result = parseUserExp(reportItem) 
+            check_result = parseUserExp(reportItem)
+        elif reportItem == "裝置：允許格式化以及退出卸除式媒體":
+            matched = True
+            check_result = parseFormatRemovable(reportItem)
+        elif reportItem == "設定用戶端連線加密層級":
+            matched = True
+            check_result = parseClientEncrypt(reportItem)
         elif reportItem == "網路安全性：NTLM SSP為主的(包含安全RPC)伺服器的最小工作階段安全性":
             matched = True
             if int(result[reportItem]) == 537395200:
@@ -662,9 +743,24 @@ def check_specific_item(reportItem):
                 result[reportItem] = "要求NTLMv2工作階段安全性,要求128位元加密"
             elif int(result[reportItem]) == 536870912:
                 result[reportItem] = "要求128位元加密"
-        elif reportItem == "設定 Windows SmartScreen 篩選工具":
+        elif reportItem == "網路安全性：設定Kerberos允許的加密類型":
             matched = True
             check_result = parseKerberos(reportItem)
+        elif reportItem == "關閉自動播放":
+            matched = True
+            check_result = parseNoAutoRun(reportItem)
+        elif reportItem == "MSS：(WarningLevel) Percentage threshold for the security event log at which the system will generate a warning":
+            matched = True
+            check_result = parseMSSPercent(reportItem)
+        elif reportItem == "MSS：(NoDefaultExempt) Configure IPSec exemptions for various types of network traffic.":
+            matched = True
+            check_result = parseMSSIPsecExempt(reportItem)
+        elif reportItem == "MSS：(DisableIPSourceRouting) IP source routing protection level (protects against packet spoofing)":
+            matched = True
+            check_result = parseMSSIPSourceRoute(reportItem)
+        elif reportItem == "MSS：(DisableIPSourceRouting IPv6)IP source routing protection level(protects against packet spoofing)":
+            matched = True
+            check_result = parseMSSIPv6SourceRoute(reportItem)
         elif reportItem == "設定時間自動校正":
             matched = True
             ntp_checked, ntp_server = parseNTP()
@@ -749,7 +845,7 @@ def final_value(reportItem):
                     else:
                         final_str = str(intvalue)   
                 
-                if regOrigResult[reportItem] == result[reportItem]:
+                if regOrigResult[reportItem] == int(result[reportItem]):
                     final_result = True
             elif readableResult[reportItem] == "Audit":
                 final_str, final_result = parse_auditRule(reportItem)
