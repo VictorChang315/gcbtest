@@ -82,7 +82,7 @@ gcb_baseline = [
     ['網路存取：限制匿名存取具名管道和共用',	r'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\restrictnullsessaccess',	1 ,'REG_DWORD',	'停用/啟用'],
     ['網路存取：可遠端存取的登錄路徑及子路徑',	r'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine', 
     r"""System\CurrentControlSet\Control\Print\Printers,System\CurrentControlSet\Services\Eventlog,Software\Microsoft\OLAP Server,Software\Microsoft\Windows NT\CurrentVersion\Print,Software\Microsoft\Windows NT\CurrentVersion\Windows,System\CurrentControlSet\Control\ContentIndex,System\CurrentControlSet\Control\Terminal Server,System\CurrentControlSet\Control\Terminal Server\UserConfig,System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration,Software\Microsoft\Windows NT\CurrentVersion\Perflib,System\CurrentControlSet\Services\SysmonLog""",	'REG_MULTI_SZ', 'Array'],	
-    ['網路存取：允許匿名SID/名稱轉譯',	r'LSAAnonymousNameLookup',	0,'?','停用/啟用'],		
+    ['網路存取：允許匿名SID/名稱轉譯',	r'LSAAnonymousNameLookup',	0,'?','值'],		
     ['網路存取：可以匿名存取的共用',	r'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionShares' ,'?','REG_MULTI_SZ','Array'],	
     ['網路存取：可以匿名存取的具名管道',	r'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionPipes','?', 'REG_MULTI_SZ', 'Array'],	
     ['網路存取：可遠端存取的登錄路徑',	r'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine',	r"""System\CurrentControlSet\Control\ProductOptions,System\CurrentControlSet\Control\Server Applications,Software\Microsoft\Windows NT\CurrentVersion""",'REG_MULTI_SZ', 'Array'],	

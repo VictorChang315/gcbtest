@@ -318,12 +318,12 @@ def parseUserControl(reportItem):
 
 def parseDevice(reportItem):
     check_result = False
-    if result[reportItem] == 0:
+    if int(result[reportItem]) == 0:
         check_result = True
         result[reportItem] = "Administrators"
-    elif result[reportItem] == 1:
+    elif int(result[reportItem]) == 1:
         result[reportItem] = "Administrators以及Power Users"
-    elif result[reportItem] == 2:
+    elif int(result[reportItem]) == 2:
         result[reportItem] = "Administrators以及Interactive Users"
     return check_result
 
@@ -363,6 +363,19 @@ def parseConfigItem(reportItem):
     elif result[reportItem] == 4:
         result[reportItem] = "停用"
     return check_result
+
+def parseFileReplica(reportItem):
+    check_result = False
+    if result[reportItem] == 4:
+        check_result = True
+        result[reportItem] = "停用"
+    elif result[reportItem] == 2:
+        result[reportItem] = "自動"
+    elif result[reportItem] == 3:
+        result[reportItem] = "手動"
+    return check_result
+
+
 
 def parseAutoRun(reportItem):
     check_result = False
@@ -475,6 +488,27 @@ def parseNoAutoRun(reportItem):
     if result[reportItem] == 255:
         check_result = True
         result[reportItem] = "已啟用：所有磁碟機"
+    elif result[reportItem] == 0:
+        result[reportItem] = "停用"
+    return check_result
+
+def parseAnoySID(reportItem):
+    check_result = False
+    if result[reportItem] == 0:
+        check_result = True
+        result[reportItem] = "停用"
+    elif result[reportItem] is None:
+        result[reportItem] = "未設定"
+    else:
+        result[reportItem] = "啟用"
+    return check_result
+
+def parseMSSexpire(reportItem):
+    check_result = False
+    if int(result[reportItem]) == 0:
+        check_result = True
+        result[reportItem] = '0'
+
     return check_result
 
 def parseClientEncrypt(reportItem):
@@ -704,10 +738,13 @@ def check_specific_item(reportItem):
             reportItem == "Windows Time" or reportItem == "Server" or reportItem == "DFS Replication" or \
             reportItem == "Active Directory Domain Services" or reportItem == "Active Directory Web Services" or \
             reportItem == "Application Identity" or reportItem == "DFS Namespace" or reportItem == "DNS Server" or \
-            reportItem == "File Replication" or reportItem == "Intersite Messaging" or \
+            reportItem == "Intersite Messaging" or \
             reportItem == "Kerberos Key Distribution Center" or reportItem == "Netlogon":
             matched = True
             check_result = parseConfigItem(reportItem)
+        elif reportItem == "File Replication":
+            matched = True
+            check_result = parseFileReplica(reportItem)
         elif reportItem == "設定 AutoRun 的預設行為":
             matched = True
             check_result = parseAutoRun(reportItem)
@@ -729,6 +766,12 @@ def check_specific_item(reportItem):
         elif reportItem == "設定用戶端連線加密層級":
             matched = True
             check_result = parseClientEncrypt(reportItem)
+        elif reportItem == "網路存取：允許匿名SID/名稱轉譯":
+            matched = True
+            check_result = parseAnoySID(reportItem)    
+        elif reportItem == "MSS：(ScreenSaverGracePeriod) The time in seconds before the screen saver grace period expires (0 recommended)":
+            matched = True
+            check_result = parseMSSexpire(reportItem)                
         elif reportItem == "網路安全性：NTLM SSP為主的(包含安全RPC)伺服器的最小工作階段安全性":
             matched = True
             if int(result[reportItem]) == 537395200:
@@ -781,19 +824,19 @@ def check_specific_item(reportItem):
         elif reportItem == "安全性\記錄檔大小上限(KB)":
             matched = True
             maxSize = parseEventLog(securitylog_filepath)
-            result[reportItem] = str(maxSize) + 'KB'
+            result[reportItem] = str(maxSize)
             if maxSize >= 196608:
                 check_result = True
         elif reportItem == "系統\記錄檔大小上限(KB)":
             matched = True
             maxSize = parseEventLog(systemlog_filepath)
-            result[reportItem] = str(maxSize) + 'KB'
+            result[reportItem] = str(maxSize)
             if maxSize >= 32768:
                 check_result = True
         elif reportItem == "應用程式\記錄檔大小上限(KB)":
             matched = True
             maxSize = parseEventLog(applog_filepath)
-            result[reportItem] = str(maxSize) + 'KB'
+            result[reportItem] = str(maxSize)
             if maxSize >= 32768:
                 check_result = True
         elif reportItem == "定期執行Microsoft Windows update":
